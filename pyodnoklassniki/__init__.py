@@ -16,7 +16,10 @@ from hashlib import md5
 
 import requests
 
-from .exceptions import APIConnectionError
+from .exceptions import (
+    OdnoklassnikiError, APIConnectionError, APIError, AuthError,
+    InvalidRequestError
+)
 
 
 app_pub_key = None
@@ -59,9 +62,47 @@ class _OAuthAPIRequestor(object):
         try:
             response = self.session.get(self.api_base, params=params)
         except requests.RequestException as exc:
-            raise APIConnectionError(exc.args[0])
+            raise APIConnectionError(
+                message='Network communication error: {}'.format(exc.args[0])
+            )
 
-        return response.json()
+        try:
+            json_resp = response.json()
+        except ValueError as exc:
+            raise APIError(
+                message='Invalid response object: {}'.format(exc.args[0]),
+                http_content=response.content,
+                http_status_code=response.status_code
+            )
+
+        # Special case when API method returns empty list.
+        if not json_resp:
+            return json_resp
+
+        if 'error_code' not in json_resp:
+            return json_resp
+        else:
+            error_message = json_resp.get('error_msg')
+            if json_resp['error_code'] in AuthError.ERROR_CODES:
+                raise AuthError(
+                    message=error_message,
+                    http_content=response.content,
+                    http_status_code=response.status_code,
+                    json=json_resp
+                )
+            if json_resp['error_code'] in InvalidRequestError.ERROR_CODES:
+                raise InvalidRequestError(
+                    message=error_message,
+                    http_content=response.content,
+                    http_status_code=response.status_code,
+                    json=json_resp
+                )
+            raise APIError(
+                message=error_message,
+                http_content=response.content,
+                http_status_code=response.status_code,
+                json=json_resp
+            )
 
     def _oauth_signature(self, params):
         """Returns OAuth signature.
