@@ -5,8 +5,8 @@ PyOdnoklassniki is an Odnoklassniki REST API wrapper.
 Usage example::
 
     >>> import pyodnoklassniki
-    >>> pyodnoklassniki.app_pub_key = 'some app pub key'
-    >>> pyodnoklassniki.app_secret_key = 'some app secret key'
+    >>> pyodnoklassniki.app_pub_key = 'CBAJ...BABA'
+    >>> pyodnoklassniki.app_secret_key = '123...XYZ'
     >>> access_token = 'kjdhfldjfhgldsjhfglkdjfg9ds8fg0sdf8gsd8fg'
     >>> ok_api = pyodnoklassniki.OdnoklassnikiAPI(access_token)
     >>> ok_api.users.getCurrentUser()
