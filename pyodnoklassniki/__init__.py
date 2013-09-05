@@ -121,6 +121,8 @@ class OdnoklassnikiAPI(object):
             if self._api_method_group is None:
                 api = OdnoklassnikiAPI(self._access_token)
                 api._api_method_group = name
+                # Caches ``api.api`` in order to reuse it.
+                self.__dict__[name] = api
                 return api
 
             if self._api_method_name is None:
@@ -133,6 +135,8 @@ class OdnoklassnikiAPI(object):
                     app_secret_key=app_secret_key,
                     api_base=api_base
                 )
+                # Caches ``api.api.api`` in order to reuse it.
+                self.__dict__[name] = api
                 return api
 
         raise AttributeError(
