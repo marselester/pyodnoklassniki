@@ -38,7 +38,7 @@ class _OAuthAPIRequestor(object):
         >>> api_base = 'http://api.odnoklassniki.ru/fb.do'
         >>> r = _OAuthAPIRequestor(access_token, app_pub_key, app_secret_key,
         ...                        api_base)
-        >>> r.get('users.getCurrentUser')
+        >>> r.get(method='users.getCurrentUser')
 
     """
 
@@ -50,17 +50,14 @@ class _OAuthAPIRequestor(object):
         self.app_secret_key = app_secret_key
         self.api_base = api_base
 
-    def get(self, method, method_params=None):
-        params = {
-            'method': method,
-            'access_token': self.access_token,
-            'application_key': self.app_pub_key,
-            'format': 'JSON',
-        }
-        params['sig'] = self._oauth_signature(params)
+    def get(self, **query_params):
+        query_params['access_token'] = self.access_token
+        query_params['application_key'] = self.app_pub_key
+        query_params['format'] = 'JSON'
+        query_params['sig'] = self._oauth_signature(query_params)
 
         try:
-            response = self.session.get(self.api_base, params=params)
+            response = self.session.get(self.api_base, params=query_params)
         except requests.RequestException as exc:
             raise APIConnectionError(
                 message='Network communication error: {}'.format(exc.args[0])
@@ -142,6 +139,7 @@ class OdnoklassnikiAPI(object):
         >>> access_token = 'kjdhfldjfhgldsjhfglkdjfg9ds8fg0sdf8gsd8fg'
         >>> ok_api = OdnoklassnikiAPI(access_token)
         >>> ok_api.users.getCurrentUser()
+        >>> ok_api.group.getInfo(uids=123, fields='name,description')
 
     Make sure that ``pyodnoklassniki.app_pub_key`` and
     ``pyodnoklassniki.app_secret_key`` are set.
@@ -184,9 +182,10 @@ class OdnoklassnikiAPI(object):
             "{} method's group, name have already been set".format(type(self))
         )
 
-    def __call__(self, **method_params):
+    def __call__(self, **query_params):
         if self._api_method:
-            return self._api_requestor.get(self._api_method, method_params)
+            query_params['method'] = self._api_method
+            return self._api_requestor.get(**query_params)
         else:
             raise TypeError('{} object is not callable'.format(type(self)))
 
