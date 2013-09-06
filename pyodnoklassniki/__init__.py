@@ -54,7 +54,8 @@ class _OAuthAPIRequestor(object):
         query_params['access_token'] = self.access_token
         query_params['application_key'] = self.app_pub_key
         query_params['format'] = 'JSON'
-        query_params['sig'] = self._oauth_signature(query_params)
+        query_params['sig'] = self._oauth_signature(query_params,
+                                                    self.app_secret_key)
 
         try:
             response = self.session.get(self.api_base, params=query_params)
@@ -101,7 +102,8 @@ class _OAuthAPIRequestor(object):
                 json=json_resp
             )
 
-    def _oauth_signature(self, params):
+    @staticmethod
+    def _oauth_signature(params, app_secret_key):
         """Returns OAuth signature.
 
         Signature requirements:
@@ -117,18 +119,17 @@ class _OAuthAPIRequestor(object):
                 md5(access_token + application_secret_key))
 
         """
-        params_composed = sorted([
-            '{}={}'.format(name, value)
-            for name, value in params.iteritems() if name != 'access_token'
-        ])
+        params_composed = ''
+        for param_name in sorted(params):
+            if param_name == 'access_token':
+                continue
+            params_composed += '{}={}'.format(param_name, params[param_name])
 
-        postfix = md5(
-            '{}{}'.format(self.access_token, self.app_secret_key)
-        ).hexdigest()
-
-        return md5(
-            '{}{}'.format(''.join(params_composed), postfix)
-        ).hexdigest()
+        token_and_secret = md5('{}{}'.format(params['access_token'],
+                                             app_secret_key))
+        signature = md5('{}{}'.format(params_composed,
+                                      token_and_secret.hexdigest()))
+        return signature.hexdigest()
 
 
 class OdnoklassnikiAPI(object):
