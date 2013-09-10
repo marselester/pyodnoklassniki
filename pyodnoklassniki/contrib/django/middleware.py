@@ -27,8 +27,7 @@ class PyOdnoklassnikiMiddleware(object):
         if not ok_settings.get('app_pub_key'):
             raise MiddlewareNotUsed
 
-        if not ok_settings.get('app_secret_key'):
-            raise MiddlewareNotUsed
-
         pyodnoklassniki.app_pub_key = ok_settings['app_pub_key']
-        pyodnoklassniki.app_secret_key = ok_settings['app_secret_key']
+
+        if 'app_secret_key' in ok_settings:
+            pyodnoklassniki.app_secret_key = ok_settings['app_secret_key']
