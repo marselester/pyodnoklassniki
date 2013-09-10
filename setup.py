@@ -5,7 +5,11 @@ from distutils.core import setup
 setup(
     name='pyodnoklassniki',
     version='0.1',
-    packages=['pyodnoklassniki'],
+    packages=[
+        'pyodnoklassniki',
+        'pyodnoklassniki.contrib',
+        'pyodnoklassniki.contrib.django',
+    ],
     author='Marsel Mavletkulov',
     author_email='marselester@ya.ru',
     url='https://github.com/marselester/pyodnoklassniki/',
