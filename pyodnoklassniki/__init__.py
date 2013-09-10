@@ -12,7 +12,7 @@ Usage example::
     >>> ok_api.users.getCurrentUser()
 
 """
-from . import requestor
+from .requestor import APIRequestor, SessionAPIRequestor, OAuth2APIRequestor
 from .exceptions import OdnoklassnikiError, AuthError, InvalidRequestError
 
 
@@ -105,20 +105,20 @@ class OdnoklassnikiAPI(object):
 
     def _appropriate_api_requestor(self):
         if self._access_token:
-            return requestor.OAuth2APIRequestor(
+            return OAuth2APIRequestor(
                 app_pub_key=app_pub_key,
                 app_secret_key=app_secret_key,
                 access_token=self._access_token,
                 api_base=api_base
             )
         if self._session_secret_key or self._session_key:
-            return requestor.SessionAPIRequestor(
+            return SessionAPIRequestor(
                 app_pub_key=app_pub_key,
                 session_secret_key=self._session_secret_key,
                 session_key=self._session_key,
                 api_base=api_base
             )
-        return requestor.APIRequestor(
+        return APIRequestor(
             app_pub_key=app_pub_key,
             app_secret_key=app_secret_key,
             api_base=api_base
