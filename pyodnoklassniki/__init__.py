@@ -13,10 +13,7 @@ Usage example::
 
 """
 from . import requestor
-from .exceptions import (
-    OdnoklassnikiError, APIConnectionError, APIError, AuthError,
-    InvalidRequestError
-)
+from .exceptions import OdnoklassnikiError, AuthError, InvalidRequestError
 
 
 app_pub_key = None
