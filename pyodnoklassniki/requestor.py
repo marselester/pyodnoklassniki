@@ -60,7 +60,7 @@ class BaseAPIRequestor(object):
             )
 
 
-class APIRequestor(object):
+class APIRequestor(BaseAPIRequestor):
     """Odnoklassniki Non Session API requestor.
 
     Usage example::
@@ -107,7 +107,7 @@ class APIRequestor(object):
         return sig.hexdigest()
 
 
-class SessionAPIRequestor(object):
+class SessionAPIRequestor(BaseAPIRequestor):
     """Odnoklassniki Session API requestor.
 
     Usage example::
