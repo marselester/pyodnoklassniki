@@ -81,12 +81,11 @@ class APIRequestor(BaseAPIRequestor):
     def get(self, **query_params):
         query_params['application_key'] = self.app_pub_key
         query_params['format'] = 'JSON'
-        query_params['sig'] = self.signature(query_params, self.app_secret_key)
+        query_params['sig'] = self._signature(query_params)
 
         return self._do_request(self.api_base, query_params)
 
-    @staticmethod
-    def signature(params, app_secret_key):
+    def _signature(self, params):
         """Returns signature.
 
         Signature requirements:
@@ -103,7 +102,7 @@ class APIRequestor(BaseAPIRequestor):
         for param_name in sorted(params):
             params_composed += '{}={}'.format(param_name, params[param_name])
 
-        sig = md5('{}{}'.format(params_composed, app_secret_key))
+        sig = md5('{}{}'.format(params_composed, self.app_secret_key))
         return sig.hexdigest()
 
 
@@ -131,12 +130,11 @@ class SessionAPIRequestor(BaseAPIRequestor):
         query_params['application_key'] = self.app_pub_key
         query_params['format'] = 'JSON'
         query_params['session_key'] = self.session_key
-        query_params['sig'] = self.signature(query_params, self.session_secret_key)
+        query_params['sig'] = self._signature(query_params)
 
         return self._do_request(self.api_base, query_params)
 
-    @staticmethod
-    def signature(params, session_secret_key):
+    def _signature(self, params):
         """Returns signature.
 
         Signature requirements:
@@ -153,7 +151,7 @@ class SessionAPIRequestor(BaseAPIRequestor):
         for param_name in sorted(params):
             params_composed += '{}={}'.format(param_name, params[param_name])
 
-        sig = md5('{}{}'.format(params_composed, session_secret_key))
+        sig = md5('{}{}'.format(params_composed, self.session_secret_key))
         return sig.hexdigest()
 
 
@@ -181,12 +179,11 @@ class OAuth2APIRequestor(BaseAPIRequestor):
         query_params['application_key'] = self.app_pub_key
         query_params['format'] = 'JSON'
         query_params['access_token'] = self.access_token
-        query_params['sig'] = self.signature(query_params, self.app_secret_key)
+        query_params['sig'] = self._signature(query_params)
 
         return self._do_request(self.api_base, query_params)
 
-    @staticmethod
-    def signature(params, app_secret_key):
+    def _signature(self, params):
         """Returns signature.
 
         Signature requirements:
@@ -207,7 +204,7 @@ class OAuth2APIRequestor(BaseAPIRequestor):
                 continue
             params_composed += '{}={}'.format(param_name, params[param_name])
 
-        token_and_secret = md5('{}{}'.format(params['access_token'],
-                                             app_secret_key))
+        token_and_secret = md5('{}{}'.format(self.access_token,
+                                             self.app_secret_key))
         sig = md5('{}{}'.format(params_composed, token_and_secret.hexdigest()))
         return sig.hexdigest()
