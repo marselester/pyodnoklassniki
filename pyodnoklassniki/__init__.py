@@ -88,7 +88,7 @@ class OdnoklassnikiAPI(object):
                 return api
 
         raise AttributeError(
-            "{} method's group, name have already been set".format(type(self))
+            "'OdnoklassnikiAPI' method's group, name have already been set"
         )
 
     def __call__(self, **query_params):
@@ -96,7 +96,7 @@ class OdnoklassnikiAPI(object):
             query_params['method'] = self._api_method
             return self._api_requestor.get(**query_params)
         else:
-            raise TypeError('{} object is not callable'.format(type(self)))
+            raise TypeError("'OdnoklassnikiAPI' object is not callable")
 
     @property
     def _api_method(self):
