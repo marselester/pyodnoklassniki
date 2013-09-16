@@ -14,6 +14,7 @@ Usage example::
 """
 from .requestor import APIRequestor, SessionAPIRequestor, OAuth2APIRequestor
 from .exceptions import OdnoklassnikiError, AuthError, InvalidRequestError
+from . import errors
 
 
 app_pub_key = None
