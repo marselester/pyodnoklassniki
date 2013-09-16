@@ -20,12 +20,11 @@ class APIError(OdnoklassnikiError):
         errors.SYSTEM,
     )
 
-    def __init__(self, message, http_content, http_status_code, json=None):
+    def __init__(self, message, http_content, http_status_code):
         super(APIError, self).__init__(message)
         self.message = message
         self.http_content = http_content
         self.http_status_code = http_status_code
-        self.json = json
 
 
 class AuthError(OdnoklassnikiError):
@@ -50,12 +49,11 @@ class AuthError(OdnoklassnikiError):
         errors.FRIEND_RESTRICTION,
     )
 
-    def __init__(self, message, http_content=None, http_status_code=None, json=None):
+    def __init__(self, message, http_content=None, http_status_code=None):
         super(AuthError, self).__init__(message)
         self.message = message
         self.http_content = http_content
         self.http_status_code = http_status_code
-        self.json = json
 
 
 class InvalidRequestError(OdnoklassnikiError, ValueError):
@@ -85,9 +83,8 @@ class InvalidRequestError(OdnoklassnikiError, ValueError):
         errors.INVALID_PAYMENT,
     )
 
-    def __init__(self, message, http_content=None, http_status_code=None, json=None):
+    def __init__(self, message, http_content=None, http_status_code=None):
         super(InvalidRequestError, self).__init__(message)
         self.message = message
         self.http_content = http_content
         self.http_status_code = http_status_code
-        self.json = json

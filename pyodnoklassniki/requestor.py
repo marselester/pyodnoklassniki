@@ -43,20 +43,17 @@ class BaseAPIRequestor(object):
                     message=error_message,
                     http_content=response.content,
                     http_status_code=response.status_code,
-                    json=json_resp
                 )
             if json_resp['error_code'] in InvalidRequestError.ERROR_CODES:
                 raise InvalidRequestError(
                     message=error_message,
                     http_content=response.content,
                     http_status_code=response.status_code,
-                    json=json_resp
                 )
             raise APIError(
                 message=error_message,
                 http_content=response.content,
                 http_status_code=response.status_code,
-                json=json_resp
             )
 
 
