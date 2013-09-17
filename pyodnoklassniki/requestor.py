@@ -38,22 +38,25 @@ class BaseAPIRequestor(object):
             return json_resp
         else:
             error_message = json_resp.get('error_msg')
-            if json_resp['error_code'] in AuthError.ERROR_CODES:
+            if json_resp['error_code'] in AuthError.CODES:
                 raise AuthError(
                     message=error_message,
                     http_content=response.content,
                     http_status_code=response.status_code,
+                    code=json_resp['error_code']
                 )
-            if json_resp['error_code'] in InvalidRequestError.ERROR_CODES:
+            if json_resp['error_code'] in InvalidRequestError.CODES:
                 raise InvalidRequestError(
                     message=error_message,
                     http_content=response.content,
                     http_status_code=response.status_code,
+                    code=json_resp['error_code']
                 )
             raise APIError(
                 message=error_message,
                 http_content=response.content,
                 http_status_code=response.status_code,
+                code=json_resp['error_code']
             )
 
 

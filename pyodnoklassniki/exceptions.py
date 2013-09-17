@@ -14,23 +14,24 @@ class APIError(OdnoklassnikiError):
     """API server errors, e.g., specific error code or invalid response object.
     """
 
-    ERROR_CODES = (
+    CODES = (
         errors.UNKNOWN,
         errors.SERVICE,
         errors.SYSTEM,
     )
 
-    def __init__(self, message, http_content, http_status_code):
+    def __init__(self, message, http_content, http_status_code, code=None):
         super(APIError, self).__init__(message)
         self.message = message
         self.http_content = http_content
         self.http_status_code = http_status_code
+        self.code = code
 
 
 class AuthError(OdnoklassnikiError):
     """Authentication and authorization errors."""
 
-    ERROR_CODES = (
+    CODES = (
         errors.ACTION_BLOCKED,
         errors.FLOOD_BLOCKED,
         errors.IP_BLOCKED,
@@ -49,17 +50,18 @@ class AuthError(OdnoklassnikiError):
         errors.FRIEND_RESTRICTION,
     )
 
-    def __init__(self, message, http_content=None, http_status_code=None):
+    def __init__(self, message, http_content=None, http_status_code=None, code=None):
         super(AuthError, self).__init__(message)
         self.message = message
         self.http_content = http_content
         self.http_status_code = http_status_code
+        self.code = code
 
 
 class InvalidRequestError(OdnoklassnikiError, ValueError):
     """Invalid request parameters' errors."""
 
-    ERROR_CODES = (
+    CODES = (
         errors.METHOD,
         errors.REQUEST,
         errors.NOT_MULTIPART,
@@ -83,8 +85,9 @@ class InvalidRequestError(OdnoklassnikiError, ValueError):
         errors.INVALID_PAYMENT,
     )
 
-    def __init__(self, message, http_content=None, http_status_code=None):
+    def __init__(self, message, http_content=None, http_status_code=None, code=None):
         super(InvalidRequestError, self).__init__(message)
         self.message = message
         self.http_content = http_content
         self.http_status_code = http_status_code
+        self.code = code
