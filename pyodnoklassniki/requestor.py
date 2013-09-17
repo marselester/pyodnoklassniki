@@ -11,56 +11,54 @@ from .exceptions import (
 session = requests.Session()
 
 
-class BaseAPIRequestor(object):
+def json_api_response(api_url, query_params):
+    try:
+        response = session.get(api_url, params=query_params)
+    except requests.RequestException as exc:
+        raise APIConnectionError(
+            message='Network communication error: {}'.format(exc.args[0])
+        )
 
-    def _do_request(self, api_url, query_params):
-        try:
-            response = session.get(api_url, params=query_params)
-        except requests.RequestException as exc:
-            raise APIConnectionError(
-                message='Network communication error: {}'.format(exc.args[0])
-            )
+    try:
+        json_resp = response.json()
+    except ValueError as exc:
+        raise APIError(
+            message='Invalid response object: {}'.format(exc.args[0]),
+            http_content=response.content,
+            http_status_code=response.status_code
+        )
 
-        try:
-            json_resp = response.json()
-        except ValueError as exc:
-            raise APIError(
-                message='Invalid response object: {}'.format(exc.args[0]),
-                http_content=response.content,
-                http_status_code=response.status_code
-            )
+    # Special case when API method returns empty list.
+    if not json_resp:
+        return json_resp
 
-        # Special case when API method returns empty list.
-        if not json_resp:
-            return json_resp
-
-        if 'error_code' not in json_resp:
-            return json_resp
-        else:
-            error_message = json_resp.get('error_msg')
-            if json_resp['error_code'] in AuthError.CODES:
-                raise AuthError(
-                    message=error_message,
-                    http_content=response.content,
-                    http_status_code=response.status_code,
-                    code=json_resp['error_code']
-                )
-            if json_resp['error_code'] in InvalidRequestError.CODES:
-                raise InvalidRequestError(
-                    message=error_message,
-                    http_content=response.content,
-                    http_status_code=response.status_code,
-                    code=json_resp['error_code']
-                )
-            raise APIError(
+    if 'error_code' not in json_resp:
+        return json_resp
+    else:
+        error_message = json_resp.get('error_msg')
+        if json_resp['error_code'] in AuthError.CODES:
+            raise AuthError(
                 message=error_message,
                 http_content=response.content,
                 http_status_code=response.status_code,
                 code=json_resp['error_code']
             )
+        if json_resp['error_code'] in InvalidRequestError.CODES:
+            raise InvalidRequestError(
+                message=error_message,
+                http_content=response.content,
+                http_status_code=response.status_code,
+                code=json_resp['error_code']
+            )
+        raise APIError(
+            message=error_message,
+            http_content=response.content,
+            http_status_code=response.status_code,
+            code=json_resp['error_code']
+        )
 
 
-class APIRequestor(BaseAPIRequestor):
+class APIRequestor(object):
     """Odnoklassniki Non Session API requestor.
 
     Usage example::
@@ -83,7 +81,7 @@ class APIRequestor(BaseAPIRequestor):
         query_params['format'] = 'JSON'
         query_params['sig'] = self._signature(query_params)
 
-        return self._do_request(self.api_base, query_params)
+        return json_api_response(self.api_base, query_params)
 
     def _signature(self, params):
         """Returns signature.
@@ -106,7 +104,7 @@ class APIRequestor(BaseAPIRequestor):
         return sig.hexdigest()
 
 
-class SessionAPIRequestor(BaseAPIRequestor):
+class SessionAPIRequestor(object):
     """Odnoklassniki Session API requestor.
 
     Usage example::
@@ -132,7 +130,7 @@ class SessionAPIRequestor(BaseAPIRequestor):
         query_params['session_key'] = self.session_key
         query_params['sig'] = self._signature(query_params)
 
-        return self._do_request(self.api_base, query_params)
+        return json_api_response(self.api_base, query_params)
 
     def _signature(self, params):
         """Returns signature.
@@ -155,7 +153,7 @@ class SessionAPIRequestor(BaseAPIRequestor):
         return sig.hexdigest()
 
 
-class OAuth2APIRequestor(BaseAPIRequestor):
+class OAuth2APIRequestor(object):
     """Odnoklassniki OAuth 2.0 API requestor.
 
     Usage example::
@@ -181,7 +179,7 @@ class OAuth2APIRequestor(BaseAPIRequestor):
         query_params['access_token'] = self.access_token
         query_params['sig'] = self._signature(query_params)
 
-        return self._do_request(self.api_base, query_params)
+        return json_api_response(self.api_base, query_params)
 
     def _signature(self, params):
         """Returns signature.
