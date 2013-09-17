@@ -63,8 +63,8 @@ class OdnoklassnikiAPICallableTest(unittest.TestCase):
         with self.assertRaisesRegexp(TypeError, expected_exc_message):
             ok_api.users()
 
-    @mock.patch('pyodnoklassniki.requestor.session.get', autospec=True)
-    def test_second_chain_of_api_instance_is_callable(self, get):
+    @mock.patch('pyodnoklassniki.requestor.session', autospec=True)
+    def test_second_chain_of_api_instance_is_callable(self, r_session):
         ok_api = OdnoklassnikiAPI()
 
         ok_api.users.getCurrentUser()
