@@ -54,5 +54,18 @@ See full list of API methods and error codes at  `Odnoklassniki API documentatio
             print ok_api.group.getInfo(uids=group['groupId'],
                                        fields='name, description')
 
+You can process particular error code such as ``PARAM_SESSION_EXPIRED`` as well.
+
+.. code-block:: python
+
+    from pyodnoklassniki import errors
+
+    try:
+        response = ok_api.users.getCurrentUser()
+    except pyodnoklassniki.AuthError as exc:
+        if exc.code == errors.PARAM_SESSION_EXPIRED:
+            # Renew session...
+            pass
+
 .. _Odnoklassniki: http://odnoklassniki.ru
 .. _Odnoklassniki API documentation: http://apiok.ru/wiki/display/ok/Odnoklassniki+REST+API+ru
