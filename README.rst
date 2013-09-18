@@ -2,6 +2,9 @@
 PyOdnoklassniki is an Odnoklassniki REST API wrapper
 ====================================================
 
+.. image:: https://travis-ci.org/marselester/pyodnoklassniki.png
+   :target: https://travis-ci.org/marselester/pyodnoklassniki
+
 This library consists of an API interface for `Odnoklassniki`_ and
 Django middleware which helps to configure it.
 
