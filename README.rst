@@ -1,6 +1,6 @@
-====================================================
-PyOdnoklassniki is an Odnoklassniki REST API wrapper
-====================================================
+=================================================
+PyOdnoklassniki is Odnoklassniki REST API wrapper
+=================================================
 
 .. image:: https://travis-ci.org/marselester/pyodnoklassniki.png
    :target: https://travis-ci.org/marselester/pyodnoklassniki

@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-PyOdnoklassniki is an Odnoklassniki REST API wrapper.
+PyOdnoklassniki is Odnoklassniki REST API wrapper.
 
 Usage example::
 
