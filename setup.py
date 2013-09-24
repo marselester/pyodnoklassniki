@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name='pyodnoklassniki',
-    version='0.12',
+    version='0.2',
     packages=[
         'pyodnoklassniki',
         'pyodnoklassniki.contrib',
