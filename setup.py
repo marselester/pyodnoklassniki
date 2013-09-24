@@ -17,5 +17,10 @@ setup(
     long_description=open('README.rst').read(),
     install_requires=[
         'requests>=1.0',
+    ],
+    classifiers=[
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
     ]
 )
