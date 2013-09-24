@@ -102,7 +102,7 @@ class OdnoklassnikiAPI(object):
     @property
     def _api_method(self):
         if self._api_method_group and self._api_method_name:
-            return '{}.{}'.format(self._api_method_group, self._api_method_name)
+            return '{0}.{1}'.format(self._api_method_group, self._api_method_name)
 
     def _appropriate_api_requestor(self):
         if self._access_token:

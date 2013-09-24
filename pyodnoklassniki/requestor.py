@@ -16,14 +16,14 @@ def json_api_response(api_url, query_params):
         response = session.get(api_url, params=query_params)
     except requests.RequestException as exc:
         raise APIConnectionError(
-            message='Network communication error: {}'.format(exc.args[0])
+            message='Network communication error: {0}'.format(exc.args[0])
         )
 
     try:
         json_resp = response.json()
     except ValueError as exc:
         raise APIError(
-            message='Invalid response object: {}'.format(exc.args[0]),
+            message='Invalid response object: {0}'.format(exc.args[0]),
             http_content=response.content,
             http_status_code=response.status_code
         )
@@ -98,9 +98,9 @@ class APIRequestor(object):
         """
         params_composed = ''
         for param_name in sorted(params):
-            params_composed += '{}={}'.format(param_name, params[param_name])
+            params_composed += '{0}={1}'.format(param_name, params[param_name])
 
-        sig = md5('{}{}'.format(params_composed, self.app_secret_key))
+        sig = md5('{0}{1}'.format(params_composed, self.app_secret_key))
         return sig.hexdigest()
 
 
@@ -147,9 +147,9 @@ class SessionAPIRequestor(object):
         """
         params_composed = ''
         for param_name in sorted(params):
-            params_composed += '{}={}'.format(param_name, params[param_name])
+            params_composed += '{0}={1}'.format(param_name, params[param_name])
 
-        sig = md5('{}{}'.format(params_composed, self.session_secret_key))
+        sig = md5('{0}{1}'.format(params_composed, self.session_secret_key))
         return sig.hexdigest()
 
 
@@ -200,9 +200,9 @@ class OAuth2APIRequestor(object):
         for param_name in sorted(params):
             if param_name == 'access_token':
                 continue
-            params_composed += '{}={}'.format(param_name, params[param_name])
+            params_composed += '{0}={1}'.format(param_name, params[param_name])
 
-        token_and_secret = md5('{}{}'.format(self.access_token,
-                                             self.app_secret_key))
-        sig = md5('{}{}'.format(params_composed, token_and_secret.hexdigest()))
+        token_and_secret = md5('{0}{1}'.format(self.access_token,
+                                               self.app_secret_key))
+        sig = md5('{0}{1}'.format(params_composed, token_and_secret.hexdigest()))
         return sig.hexdigest()
