@@ -9,6 +9,10 @@ class OdnoklassnikiError(Exception):
 class APIConnectionError(OdnoklassnikiError):
     """Network communication errors."""
 
+    def __init__(self, message):
+        super(APIConnectionError, self).__init__(message)
+        self.message = message
+
 
 class APIError(OdnoklassnikiError):
     """API server errors, e.g., specific error code or invalid response object.
