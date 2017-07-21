@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-from distutils.core import setup
-
+from setuptools import setup
 
 setup(
     name='pyodnoklassniki',
-    version='0.2.1',
+    version='1.0.0',
     packages=[
         'pyodnoklassniki',
         'pyodnoklassniki.contrib',
@@ -20,7 +19,7 @@ setup(
     ],
     classifiers=[
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
     ]
 )
