@@ -100,7 +100,9 @@ class APIRequestor(object):
         for param_name in sorted(params):
             params_composed += '{0}={1}'.format(param_name, params[param_name])
 
-        sig = md5('{0}{1}'.format(params_composed, self.app_secret_key))
+        msg_byte = '{}{}'.format(params_composed, self.app_secret_key) \
+            .encode('utf-8')
+        sig = md5(msg_byte)
         return sig.hexdigest()
 
 
@@ -149,7 +151,9 @@ class SessionAPIRequestor(object):
         for param_name in sorted(params):
             params_composed += '{0}={1}'.format(param_name, params[param_name])
 
-        sig = md5('{0}{1}'.format(params_composed, self.session_secret_key))
+        msg_byte = '{}{}'.format(params_composed, self.session_secret_key) \
+            .encode('utf-8')
+        sig = md5(msg_byte)
         return sig.hexdigest()
 
 
@@ -202,7 +206,10 @@ class OAuth2APIRequestor(object):
                 continue
             params_composed += '{0}={1}'.format(param_name, params[param_name])
 
-        token_and_secret = md5('{0}{1}'.format(self.access_token,
-                                               self.app_secret_key))
-        sig = md5('{0}{1}'.format(params_composed, token_and_secret.hexdigest()))
+        token_and_secret = md5(
+            '{}{}'.format(self.access_token, self.app_secret_key).encode('utf-8')
+        ).hexdigest()
+        sig = md5(
+            '{}{}'.format(params_composed, token_and_secret).encode('utf-8')
+        )
         return sig.hexdigest()
